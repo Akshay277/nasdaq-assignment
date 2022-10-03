@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * @file
+ * Install Authorization Field.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function user_auth_custom_install() {
+  $userStorage = \Drupal::entityTypeManager()->getStorage('user');
+  $user_id = $userStorage->getQuery()->execute();
+  foreach ($user_id as $val) {
+    $user = \Drupal\user\Entity\User::load($val);
+    $field_name = 'field_auth_token';
+    if ($user->hasField($field_name)) {
+      $check_auth_exist = \Drupal::entityQuery('user')
+              ->condition('field_auth_token', $random)
+              ->execute();
+
+      if(!empty($check_auth_exist)) {
+        $random = generateRandomString(9);
+      }
+      else {
+        $random = generateRandomString(10);
+      }
+      $user->set('field_auth_token', $random);
+    }
+    $user->save();
+  }
+}
+
+
+/**
+ * Generate random string alpha numberic.
+*/
+
+function generateRandomString($length) {
+  $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  $charactersLength = strlen($characters);
+  $randomString = '';
+  for ($i = 0; $i < $length; $i++) {
+      $randomString .= $characters[rand(0, $charactersLength - 1)];
+  }
+  return $randomString;
+}
+  

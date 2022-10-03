@@ -1,0 +1,5 @@
+name: Custom User Authenticate(Nasdaq)
+description: This is a custom module to authenticate user using token.
+type: module
+core_version_requirement: ^8 || ^9
+package: Custom
